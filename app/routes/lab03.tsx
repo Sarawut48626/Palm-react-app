@@ -1,11 +1,13 @@
 // Filename: lab03.tsx
 import Profiler from "./components/Profile";
-import Contact  from "./components/Contact";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
 export default function MyProfile(){
     return (
         <>
         <Profiler />
+        
         <div className="flex items-center m-5 w-1/2 mx-auto">
         <div className="grid grid-cols-3 gap-3 mx-auto">
         <Contact 
@@ -28,6 +30,9 @@ export default function MyProfile(){
             <a href=" /">Back</a>
         </div>
     </div>
+    <Footer
+    title={"Sarawut"}
+        />
         </>
     );
 }
