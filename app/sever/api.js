@@ -1,11 +1,44 @@
 import express from 'express';
 import cors from 'cors';
 
+import admin from 'firebase-admin';
+import serviceAccount from './firebase/webprog-1006-5-firebase-adminsdk-fbsvc-c9442bfcd4.json' with { type: 'json'};
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
+
 const app = express()
 const port = 3000
 
 app.use(express.json());
 app.use(cors());
+
+// Get data from Book collection
+async function fetchDataDB() {
+    const result = [];
+    const booksRef = db.collection('Books');
+    const booksSnap = await booksRef.get();
+    booksSnap.forEach(doc => {
+        result.push({
+            id: doc.id,
+            ...doc.data()
+        });
+    });
+    return result; // JSON.stringify(result)
+}
+
+// http://localhost:3000/api/getBooksFromDB
+app.get('/api/getBooksFromDB', (req, res) => {
+    res.set('Content-type', 'application/json');
+    fetchDataDB().then((jsonData) => {
+        res.json(jsonData);
+    }).catch((error) => {
+        res.json(error);
+    });
+});
 
 let books = [
     { id:1,Title: "Web Techology",author: "Mean1"},
